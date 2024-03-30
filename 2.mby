@@ -1,0 +1,75 @@
+from machine import Pin
+from neopixel import NeoPixel
+from time import sleep
+import display
+
+# Your NeoPixel initialization
+np = NeoPixel(Pin(13, Pin.OUT), 25)
+x = 0
+y = 0
+
+swA = Pin(5, Pin.IN, Pin.PULL_UP) 
+swB = Pin(12, Pin.IN, Pin.PULL_UP)  
+sw1 = Pin(15, Pin.IN, Pin.PULL_UP) 
+sw2 = Pin(2, Pin.IN, Pin.PULL_UP)  
+
+colors = [(30, 0, 0)]  # Red, Blue, Purple, Green
+color_index = 0  # Initial color index
+
+while True:
+    display.dot(x, y, display.hex2byte('#ff0000'))
+    display.raw(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x33\xff\x33\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00") 
+
+    # Check if sw1 is pressed to change the pattern
+    if swA.value() == 0:
+        display.dot(x, y, display.hex2byte('#ff0000'))
+        sleep(0.25)
+        y = (y + 1)
+    if y > 4:
+        display.dot(x, 4, display.hex2byte('#ff0000'))
+        buzzer.tone(2000)
+        sleep(1)
+        display.dot(x, 4, display.hex2byte('#ff0000'))
+        y = 4
+
+    if swB.value() == 0:
+        display.dot(x, y, display.hex2byte('#ff0000'))
+        sleep(0.25)
+        y = (y - 1)
+    if y < 0:
+        display.dot(x, 0, display.hex2byte('#ff0000'))
+        buzzer.tone(2000)
+        sleep(1)
+        display.dot(x, 0, display.hex2byte('#ff0000'))
+        y = 0
+
+    if sw1.value() == 0:
+        display.dot(x, y, display.hex2byte('#ff0000'))
+        sleep(0.25)
+        x = (x - 1)
+    if x < 0:
+        display.dot(0, y, display.hex2byte('#ff0000'))
+        buzzer.tone(2000)
+        sleep(1)
+        display.dot(0, y, display.hex2byte('#ff0000'))
+        x = 0
+
+    if sw2.value() == 0:
+        display.dot(x, y, display.hex2byte('#ff0000'))
+        sleep(0.25)
+        x = (x + 1)
+    if x > 4:
+        display.dot(4, y, display.hex2byte('#ff0000'))
+        buzzer.tone(2000)
+        sleep(1)
+        display.dot(4, y, display.hex2byte('#ff0000'))
+        x = 4
+
+    # Check if sw2 is pressed to change the color
+    if x == 2 and y == 2 :
+        display.clear()
+        display.dot(2, 2, display.hex2byte('#ff0000'))
+        buzzer.tone(1000, 1)
+        display.scroll('Finish', color=display.hex2byte('#33cc00'))
+        x = 0
+        y = 0
